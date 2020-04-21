@@ -1,0 +1,398 @@
+@font-face {
+    font-family: 'Righteous';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Righteous'), local('Righteous-Regular'), url(../resources/font-righteous.woff2) format('woff2');
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #000;
+    background-image: url(../resources/background.png);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    font-family: 'Righteous',Arial,sans-serif;
+}
+
+span.rank {
+    float: left;
+    display: block;
+    width: 10%;
+    text-indent: 10px;
+}
+
+span.name {
+    float: left;
+    display: block;
+    width: 35%;
+}
+
+span.score {
+    float: left;
+    display: block;
+    width: 20%;
+}
+
+span.level {
+    float: left;
+    display: block;
+    width: 15%;
+}
+
+span.date {
+    float: left;
+    display: block;
+    width: 20%;
+}
+
+@media screen and (max-width: 1920px) {
+    body {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 1900px) {
+    body {
+        font-size: 22px;
+    }
+}
+
+@media screen and (max-width: 1800px) {
+    body {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 1600px) {
+    body {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 1450px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 1140px) {
+    body {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    body {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    body {
+        font-size: 8px;
+    }
+    span.name {
+        width: 50%;
+    }
+    span.rank {
+        width: 8%;
+    }
+    span.score {
+        width: 10%;
+    }
+    span.level {
+        width: 10%;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    body {
+        font-size: 6px;
+    }
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#game-score {
+    position: absolute;
+    display: none;
+    left: 50%;
+    bottom: 6%;
+    color: #FFF;
+    width: 400px;
+    margin-left: -200px;
+    font-size: 16px;
+    text-align: center;
+}
+
+#game-fps {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: rgba(256,256,256,0.1);
+    font-size: 12px;
+}
+
+#game-level {
+    color: #fff;
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    margin-left: -100px;
+    width: 200px;
+    font-size: 48px;
+    text-align: center;
+    display: none;
+}
+
+#game-name {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    margin-top: -10vw;
+    color: #fff;
+    font-size: 10vw;
+    text-align: center;
+    text-shadow: 0 0 25px rgba(0,0,0,0.1);
+}
+
+#game-credits {
+    position: absolute;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    bottom: 2%;
+    text-align: center;
+    color: rgba(256,256,256,.2);
+    font-size: 12px;
+}
+
+a#game-audio {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background-image: url(../resources/audio-on.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    transition: transform .2s;
+}
+
+a#game-audio:hover {
+    transform: scale(1.25);
+    transition: transform .2s;
+}
+
+#game-audio.off {
+    background-image: url(../resources/audio-off.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#overlay {
+    position: fixed;
+    background-color: rgba(0,0,0,.5);
+    width: 100%;
+    height: 100%;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    float: left;
+    width: 100%;
+    list-style: none;
+    padding: 5px 0;
+}
+
+li.odd {
+    color: rgba(255,255,255,.5);
+    background: rgba(255,255,255,.1);
+}
+
+li.legenda {
+    color: #fff;
+    border-bottom: 1px solid #fff;
+    background: rgba(255,255,255,.33);
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background: rgba(255,255,255,.1);
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255,255,255,.25);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.5);
+}
+
+::-webkit-input-placeholder {
+    color: rgba(255,255,255,.75);
+}
+::-moz-placeholder {
+    color: rgba(255,255,255,.75);
+}
+:-ms-input-placeholder {
+    color: rgba(255,255,255,.75);
+}
+:-moz-placeholder {
+    color: rgba(255,255,255,.75);
+}
+
+/* New UI Style */
+.game-navigation {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    float: left;
+    width: 25%;
+    height: 100%;
+    background: rgba(50,50,100,.33);
+    z-index: 10;
+    margin-left: -12.5%;
+}
+
+.left {
+    left: 0;
+    margin-left: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.game-navigation a.button {
+    float: left;
+    display: block;
+    width: 74%;
+    padding: 3%;
+    margin: 5% 10% 0;
+    background: rgba(255,255,255,.25);
+    border: 1px solid rgba(255,255,255,.5);
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    text-align: center;
+    font-size: 90%;
+    transition: .2s;
+    text-transform: uppercase;
+}
+
+.game-navigation a.button:active,
+.game-navigation a.button:hover  {
+    transform: scale(1.1);
+    color: white;
+    border: 1px solid white;
+    background: rgba(255,255,255,.5);
+    transition: .2s;
+}
+
+.game-navigation .logo {
+    background-image: url(../resources/icon-128.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    width: 100%;
+    height: 12%;
+    margin: 12% 0 3%;
+}
+
+.game-navigation .created-by {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    font-size: 60%;
+    font-weight: normal;
+    color: rgba(255,255,255,.25);
+    width: 100%;
+    margin: 0;
+}
+
+.game-navigation .name {
+    text-align: center;
+    color: white;
+    font-size: 230%;
+    margin: 0;
+}
+
+.game-section {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 75%;
+    height: 100%;
+    background: rgba(50,50,100,.5);
+    z-index: 10;
+}
+
+.game-section h1 {
+    color: #fff;
+    text-transform: uppercase;
+    margin: 0;
+    height: 5%;
+}
+
+.game-section .wrapper {
+    margin: 5%;
+}
+
+.game-section .content {
+    position: absolute;
+    height: 80%;
+    width: 90%;
+    background-color: rgba(255,255,255,.1);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.game-section .content p {
+    margin: 10px;
+    color: #fff;
+    font-size: 80%;
+}
+
+.game-section .content p a {
+    color: #aaa;
+}
+
+.game-section #game-highscore {
+    left: 0;
+    top: 0;
+    position: relative;
+    display: block;
+    background: none;
+    font-size: 70%;
+    padding: 15px;
+    float: left;
+    color: white;
+}
+
+mark {
+    background: rgba(255,0,0,0.5);
+    color: #fff;
+}
