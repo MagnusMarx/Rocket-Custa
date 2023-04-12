@@ -2,7 +2,7 @@
     font-family: 'Righteous';
     font-style: normal;
     font-weight: 400;
-    src: local('Righteous'), local('Righteous-Regular'), url(../resources/font-righteous.woff2) format('woff2');
+    src: local('Righteous'), local('Righteous-Regular'), url(../font/font-righteous.woff2) format('woff2');
 }
 
 html,
@@ -12,7 +12,7 @@ body {
     height: 100%;
     width: 100%;
     background-color: #000;
-    background-image: url(../resources/background.png);
+    background-image: url(../img/background.png);
     background-size: cover;
     background-position: center;
     overflow: hidden;
@@ -190,7 +190,7 @@ a#game-audio {
     right: 10px;
     width: 24px;
     height: 24px;
-    background-image: url(../resources/audio-on.png);
+    background-image: url(../img/audio-on.png);
     background-repeat: no-repeat;
     background-size: contain;
     transition: transform .2s;
@@ -202,7 +202,7 @@ a#game-audio:hover {
 }
 
 #game-audio.off {
-    background-image: url(../resources/audio-off.png);
+    background-image: url(../img/audio-off.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -312,7 +312,7 @@ li.legenda {
 }
 
 .game-navigation .logo {
-    background-image: url(../resources/icon-128.png);
+    background-image: url(../img/icon-128.png);
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
