@@ -1,14 +1,12 @@
-/**
- * Rocket Custa
- * @constructor
- * @class RocketCusta
- * @namespace RocketCusta
- */
 RocketCusta = () => {};
 
 // FPS
 RocketCusta.lastCalledTime = Date.now();
 RocketCusta.fps = 0;
+function audio() {
+    let audio1 = document.getElementById("audio-background");
+    audio1.play();
+  }
 
 // Player Attributes
 RocketCusta.scale = window.innerHeight / 1000;
@@ -18,19 +16,19 @@ RocketCusta.score = 0;
 RocketCusta.scoreUpdate = 0;
 RocketCusta.gameover = false;
 RocketCusta.gameoverTimer = 6;
-RocketCusta.timer = setInterval(RocketCusta.spawnComet, 10);
+RocketCusta.timer = null;
 RocketCusta.pause = true;
 RocketCusta.audio = true;
 RocketCusta.clickPositionY = null;
 RocketCusta.clickPositionX = null;
 RocketCusta.menu = false;
+RocketCusta.mobile = false;
 
 /**
  * Keyboard Event
  * @type {{left: boolean, right: boolean, up: boolean, down: boolean, esc: boolean}}
  */
-RocketCusta.keyboard =
-{
+RocketCusta.keyboard = {
     left: false,
     right: false,
     up: false,
@@ -56,8 +54,7 @@ RocketCusta.rocketImage = new Image();
  * @param {Number} speedFactorY
  * @param {Number} rotation
  */
-RocketCusta.rocket = function()
-{
+RocketCusta.rocket = function () {
     this.name = 'rocket';
     this.width = 100 * (window.innerHeight / 1000);
     this.height = 65 * (window.innerHeight / 1000);
@@ -81,8 +78,7 @@ RocketCusta.rockets = [];
  * @param {Number} radius Radius of the thrust circle
  * @param {Number} alpha Alpha of the thrust circle
  */
-RocketCusta.thrust = function()
-{
+RocketCusta.thrust = function () {
     this.y = (Math.random() * 10) - 5;
     this.x = Math.round(window.innerWidth / 5);
     this.radius = (12 + 10 * Math.random()) * (RocketCusta.scale);
@@ -98,8 +94,7 @@ RocketCusta.thrusts = [];
  * @param {Number} y Y Position of the star
  * @param {Number} speed Speed of the star
  */
-RocketCusta.star = function()
-{
+RocketCusta.star = function () {
     this.radius = Math.random() * 2;
     this.x = Math.random() * window.innerWidth;
     this.y = Math.random() * window.innerHeight;
@@ -107,7 +102,7 @@ RocketCusta.star = function()
 };
 RocketCusta.stars = [];
 
-// Planet image init
+// Planet
 RocketCusta.planetImage = [
     new Image(),
     new Image()
@@ -122,18 +117,17 @@ RocketCusta.planetImage = [
  * @param {String} color Color of the planet
  * @param {Image} image Image of the planet
  */
-RocketCusta.planet = function()
-{
+RocketCusta.planet = function () {
     this.radius = window.innerHeight / 8 + Math.random() * window.innerHeight / 2;
     this.x = window.innerWidth + this.radius + 500;
     this.y = Math.random() * window.innerHeight;
     this.speed = RocketCusta.speed / 2 + Math.random() * RocketCusta.speed / 4;
-    this.color = 'rgb(' + Math.round(Math.random() * 256) + ',' +  Math.round(Math.random() * 256) +',' + Math.round(Math.random() * 256) + ')';
+    this.color = 'rgb(' + Math.round(Math.random() * 256) + ',' + Math.round(Math.random() * 256) + ',' + Math.round(Math.random() * 256) + ')';
     this.image = RocketCusta.planetImage[Math.floor(Math.random() * RocketCusta.planetImage.length)];
 };
 RocketCusta.planets = [];
 
-// Moon image init
+// Moon
 RocketCusta.moonImage = [
     new Image(),
     new Image()
@@ -148,14 +142,13 @@ RocketCusta.moonImage = [
  * @param {Image} image Image of the moon
  * @param {String} color Color of the moon
  */
-RocketCusta.moon = function()
-{
+RocketCusta.moon = function () {
     this.radius = (10 + Math.random() * 125) * RocketCusta.scale;
     this.x = window.innerWidth + this.radius;
     this.y = Math.random() * window.innerHeight;
     this.speed = RocketCusta.speed / 4 + Math.random() * RocketCusta.speed / 8;
     this.image = RocketCusta.moonImage[Math.floor(Math.random() * RocketCusta.moonImage.length)];
-    this.color = 'rgb(' + Math.round(Math.random() * 32) + ',' +  Math.round(Math.random() * 32) +',' + Math.round(Math.random() * 128) + ')';
+    this.color = 'rgb(' + Math.round(Math.random() * 32) + ',' + Math.round(Math.random() * 32) + ',' + Math.round(Math.random() * 128) + ')';
 };
 RocketCusta.moons = [];
 
@@ -183,8 +176,7 @@ RocketCusta.cometImage = [
  * @param {Image} image Image of the comet
  * @param {Number} force Rotation direction of the comet
  */
-RocketCusta.comet = function()
-{
+RocketCusta.comet = function () {
     this.name = 'comet';
     this.radius = Math.round(window.innerHeight / 100) + Math.random() * (Math.round(window.innerHeight / 18) + RocketCusta.level);
     this.width = (this.radius * 2) - (Math.round(this.radius / 5));
@@ -209,13 +201,12 @@ RocketCusta.comets = [];
  * @param {Number} radius Radius of the exlosion circle
  * @param {String} color Color of the explosion circle
  */
-RocketCusta.explosion = function()
-{
+RocketCusta.explosion = function () {
     this.y = 0;
     this.x = 0;
     this.alpha = 1;
     this.radius = 1;
-    this.color = 'rgba(' + Math.round(Math.random() * 256) + ',' +  Math.round(Math.random() * 5) +',' + Math.round(Math.random() * 5);
+    this.color = 'rgba(' + Math.round(Math.random() * 256) + ',' + Math.round(Math.random() * 5) + ',' + Math.round(Math.random() * 5);
 };
 RocketCusta.explosions = [];
 
@@ -223,26 +214,17 @@ RocketCusta.explosions = [];
  * Initialize Funtion
  * @method initialize
  */
-document.addEventListener("DOMContentLoaded", function()
-{
-    let pathname = location.pathname;
-    let path = pathname.match(/play|options|how-to-play|highscores|credits/gi);
+jQuery(document).ready(() => {
+    RocketCusta.planetImage[0].src = './assets/img/planet-1.png';
+    RocketCusta.planetImage[1].src = './assets/img/planet-2.png';
 
-    if(path == null)
-        path = '';
-    else
-        path = '../'
+    RocketCusta.moonImage[0].src = './assets/img/moon-1.png';
+    RocketCusta.moonImage[1].src = './assets/img/moon-2.png';
 
-    RocketCusta.planetImage[0].src = path + 'code/resources/planet-1.png';
-    RocketCusta.planetImage[1].src = path + 'code/resources/planet-2.png';
+    RocketCusta.cometImage[0].src = './assets/img/comet-1.png';
+    RocketCusta.cometImage[1].src = './assets/img/comet-2.png';
 
-    RocketCusta.moonImage[0].src = path + 'code/resources/moon-1.png';
-    RocketCusta.moonImage[1].src = path + 'code/resources/moon-2.png';
-
-    RocketCusta.cometImage[0].src = path + 'code/resources/comet-1.png';
-    RocketCusta.cometImage[1].src = path + 'code/resources/comet-2.png';
-
-    RocketCusta.rocketImage.src = path + 'code/resources/rocket.png';
+    RocketCusta.rocketImage.src = './assets/img/rocket.png';
 
     // Init Game
     RocketCusta.canvas = document.getElementById('rocket-custa');
@@ -251,38 +233,91 @@ document.addEventListener("DOMContentLoaded", function()
     RocketCusta.context.canvas.height = window.innerHeight;
     RocketCusta.context.canvas.width = window.innerWidth;
 
-    // Events
     RocketCusta.keyboardEvent();
+    RocketCusta.clickEvent();
+    //RocketCusta.motionEvent();
 
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('#game-audio'))
-        {
-            RocketCusta.gameAudio();
-        }
-    })
+    jQuery(window).resize(RocketCusta.resizeEvent);
 
-    const {gameStart} = RocketCusta;
-    setTimeout(gameStart, 100);
+    jQuery('#game-start').click(() => {
+        jQuery('.game-navigation').slideUp();
+        jQuery('#game-score').delay(500).fadeIn(500);
+        jQuery('#game-level').delay(300).fadeIn(500);
+        jQuery('#game-credits').fadeIn(500);
+        RocketCusta.menu = false;
+        RocketCusta.comets = []
+        RocketCusta.gameStart();
+    });
+    jQuery('#game-audio').click(RocketCusta.gameAudio);
+
+    // Device Detection
+    //if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)  || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) RocketCusta.mobile = true;
+
+    // Submit Highscore Event Handler
+    jQuery('#game-submit-highscore').click(() => {
+        jQuery('#game-username').fadeOut();
+        jQuery('#game-submit-highscore').fadeOut();
+        jQuery('#game-user-level').fadeOut();
+        jQuery('#game-user-score').fadeOut();
+        RocketCusta.getScoreTop();
+        RocketCusta.submitScore();
+    });
+
+    RocketCusta.menu = true;
+    RocketCusta.gameStart();
+    jQuery('.game-navigation').slideToggle(true);
+
 });
+
+
+/**
+ * Get Top Scores Function
+ * @method getScoreTop
+ */
+RocketCusta.getScoreTop = function () {
+    var url = RocketCusta.requestUrl + '?action=getHighScoreByTop';
+
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            jQuery('#game-highscore ul').empty();
+            jQuery('#game-highscore ul').append('<li class="legenda"><span class="rank">Rank</span><span class="name">Name</span><span class="score">Score</span><span class="level">Level</span><span class="date">Date</span></li>');
+            jQuery.each(JSON.parse(request.response), function (id, obj) {
+                if (id % 2 == 0) {
+                    jQuery('#game-highscore ul').append('<li><span class="rank">' + obj.Rank + '</span><span class="name">' + obj.Name + '</span><span class="score">' + obj.Score + '</span><span class="level">Level ' + obj.Level + '</span><span class="date">' + obj.DateCreated + '</span></li>');
+                } else {
+                    jQuery('#game-highscore ul').append('<li class="odd"><span class="rank">' + obj.Rank + '</span><span class="name">' + obj.Name + '</span><span class="score">' + obj.Score + '</span><span class="level">Level ' + obj.Level + '</span><span class="date">' + obj.DateCreated + '</span></li>');
+                }
+            });
+            jQuery('#game-highscore').slideDown(true);
+        } else {
+            jQuery('#game-highscore').slideDown(true);
+            jQuery('#game-highscore ul').empty();
+            jQuery('#game-highscore ul').append('<li>No High Scores Available.</li>');
+        }
+    };
+
+    request.open('GET', url, true);
+    request.send();
+};
+
+/**
+ * Submit Score Function
+ * @method submitScore
+ */
+RocketCusta.submitScore = function () {
+    var url = RocketCusta.requestUrl + '?username=' + jQuery('#game-username').val() + '&score=' + RocketCusta.score + '&level=' + RocketCusta.level;
+
+    var request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.send();
+};
 
 /**
  * Initalize Game Function
  * @method initGame
  */
-RocketCusta.initGame = function()
-{
-    // Set score visible
-    let gameScore = document.querySelector('#game-score');
-    if (gameScore !== null) {
-        gameScore.style.display = 'block';
-    }
-
-    // Set level visible
-    let gameLevel = document.querySelector('#game-level');
-    if (gameLevel !== null) {
-        gameLevel.style.display = 'block';
-    }
-
+RocketCusta.initGame = function () {
     // Spawn Objects
     RocketCusta.spawnStar();
     RocketCusta.spawnPlanet();
@@ -303,15 +338,13 @@ RocketCusta.initGame = function()
  * Pause Game
  * @method pauseGame
  */
-RocketCusta.pauseGame = function()
-{
+RocketCusta.pauseGame = function () {
     RocketCusta.pause = !RocketCusta.pause;
 
     if (!RocketCusta.pause) {
         RocketCusta.timer = setInterval(RocketCusta.spawnComet, 1000);
         RocketCusta.updateFrame();
-    }
-    else {
+    } else {
         clearInterval(RocketCusta.timer);
     }
 };
@@ -320,19 +353,31 @@ RocketCusta.pauseGame = function()
  * Start Game Function
  * @method gameStart
  */
-RocketCusta.gameStart = function()
-{
-    if(RocketCusta.pause) {
+RocketCusta.gameStart = function () {
+    if (RocketCusta.pause) {
         RocketCusta.initGame();
+
         RocketCusta.pause = false;
 
-        RocketCusta.updateFrame();
+        //jQuery('#game-start').fadeOut();
+        //jQuery('#game-name').slideUp();
+        //jQuery('#game-highscore').slideUp();
 
-        console.log(location.pathname)
-        let isInGame = location.pathname;
-        if(isInGame === '/play/') {
-            RocketCusta.timer = setInterval(RocketCusta.spawnComet, 1000);
+        //jQuery('#game-username').fadeOut();
+        //jQuery('#game-submit-highscore').fadeOut();
+        //jQuery('#game-user-level').fadeOut();
+        //jQuery('#game-user-score').fadeOut();
+
+        if (!RocketCusta.menu) {
+            jQuery('.game-navigation, .game-section').slideUp();
+            jQuery('.game-over').fadeOut(500);
+            jQuery('#game-score').delay(500).fadeIn(500);
+            jQuery('#game-level').delay(300).fadeIn(500);
+            jQuery('#game-credits').fadeIn(500);
         }
+
+        RocketCusta.updateFrame();
+        RocketCusta.timer = setInterval(RocketCusta.spawnComet, 1000);
     }
 };
 
@@ -340,8 +385,7 @@ RocketCusta.gameStart = function()
  * Game Over Function
  * @method gameOver
  */
-RocketCusta.gameOver = function()
-{
+RocketCusta.gameOver = function () {
     clearInterval(RocketCusta.timer);
     RocketCusta.pause = true;
     RocketCusta.gameover = false;
@@ -355,8 +399,24 @@ RocketCusta.gameOver = function()
     RocketCusta.thrusts = [];
     RocketCusta.explosions = [];
 
-    let gameNavigation = document.querySelector('.game-navigation');
-    gameNavigation.style.display = 'block';
+    RocketCusta.getScoreTop();
+
+    jQuery(".game-navigation").css({
+        left: 0,
+        marginLeft: 0
+    });
+    jQuery('.game-navigation').slideToggle(true);
+    jQuery('.game-section').slideToggle(true);
+    jQuery('.game-over, #game-username, #game-submit-highscore, #game-user-level, #game-user-score').fadeIn(750);
+    jQuery('#game-level,#game-score,#game-credits').hide();
+    //jQuery('#game-score').fadeOut();
+    //jQuery('#game-level').fadeOut();
+    //jQuery('#game-start').delay(500).fadeIn();
+    //jQuery('#game-highscore').delay(500).slideDown();
+    //jQuery('#game-username').delay(750).fadeIn();
+    //jQuery('#game-submit-highscore').delay(750).fadeIn();
+    //jQuery('#game-user-level').delay(750).fadeIn();
+    //jQuery('#game-user-score').delay(750).fadeIn();
 
     document.getElementById('audio-explosion').play();
 };
@@ -365,11 +425,10 @@ RocketCusta.gameOver = function()
  * Game Audio
  * @method gameAudio
  */
-RocketCusta.gameAudio = function()
-{
-    document.querySelector('#game-audio').classList.toggle('off');
-    let audioBackground = document.getElementById('audio-background');
-    let audioExplosion = document.getElementById('audio-explosion');
+RocketCusta.gameAudio = function () {
+    jQuery('#game-audio').toggleClass('off');
+    var audioBackground = document.getElementById('audio-background');
+    var audioExplosion = document.getElementById('audio-explosion');
     audioBackground.muted = !audioBackground.muted;
     audioExplosion.muted = !audioExplosion.muted;
 };
@@ -378,75 +437,141 @@ RocketCusta.gameAudio = function()
  * Resize Event
  * @method resizeEvent
  */
-RocketCusta.resizeEvent = function()
-{
+RocketCusta.resizeEvent = function () {
     RocketCusta.context.canvas.height = window.innerHeight;
     RocketCusta.context.canvas.width = window.innerWidth;
-    if(!RocketCusta.pause) {
+    if (!RocketCusta.pause)
         RocketCusta.gameStart();
+};
+
+/**
+ * Motion Event Function
+ * @method motionEvent
+ */
+RocketCusta.motionEvent = function () {
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function (event) {
+
+            // gamma is the left-to-right tilt in degrees, where right is positive
+            var tiltLR = event.gamma;
+
+            // beta is the front-to-back tilt in degrees, where front is positive
+            var tiltFB = event.beta;
+
+            // alpha is the compass direction the device is facing in degrees
+            var dir = event.alpha;
+
+            var rocketCount = RocketCusta.rockets.length;
+            for (var i = 0; i < rocketCount; i++) {
+                RocketCusta.rockets[i].speedFactorY = tiltFB / 180;
+                RocketCusta.rockets[i].speedFactorX = tiltLR / 180;
+            }
+
+        }, false);
     }
+
+};
+
+/**
+ * Click / Touch Event Function
+ * @method clickEvent
+ */
+RocketCusta.clickEvent = function () {
+    // Mouse Down Event
+    jQuery(document).on('mousedown touchstart', '#rocket-custa', event => {
+        if (!RocketCusta.pause) {
+            if (event.type == 'touchstart') {
+                var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+                var positionX = touch.pageX;
+                var positionY = touch.pageY;
+            } else {
+                var positionX = event.pageX;
+                var positionY = event.pageY;
+            }
+
+            // Y Position
+            if (positionY < RocketCusta.rockets[0].y)
+                RocketCusta.keyboard.up = true;
+            else if (positionY > RocketCusta.rockets[0].y)
+                RocketCusta.keyboard.down = true;
+
+            // X Position
+            if (positionX < RocketCusta.rockets[0].x)
+                RocketCusta.keyboard.left = true;
+            else if (positionX > RocketCusta.rockets[0].x)
+                RocketCusta.keyboard.right = true;
+
+        }
+    });
+
+    // Mouse Up Event
+    jQuery(document).on('mouseup touchend', () => {
+        RocketCusta.keyboard.up = false;
+        RocketCusta.keyboard.down = false;
+        RocketCusta.keyboard.left = false;
+        RocketCusta.keyboard.right = false;
+    });
 };
 
 /**
  * Keyboard Event Function
  * @method keyboardEvent
  */
-RocketCusta.keyboardEvent = function()
-{
+RocketCusta.keyboardEvent = function () {
     // Key Down
-    document.addEventListener('keydown', function(event) {
-        switch (event.key) {
+    jQuery(document).keydown(event => {
+        switch (event.keyCode) {
             // Left & A Key
-            case 'a':
-            case 'ArrowLeft':
+            case 37:
+            case 65:
                 RocketCusta.keyboard.left = true;
                 break;
-            // Up & W Key
-            case 'w':
-            case 'ArrowUp':
+                // Up & W Key
+            case 38:
+            case 87:
                 RocketCusta.keyboard.up = true;
                 break;
-            // Right & D Key
-            case 'd':
-            case 'ArrowRight':
+                // Right & D Key
+            case 39:
+            case 68:
                 RocketCusta.keyboard.right = true;
                 break;
-            // Down & S Key
-            case 's':
-            case 'ArrowDown':
+                // Down & S Key
+            case 40:
+            case 83:
                 RocketCusta.keyboard.down = true;
                 break;
-            // Esc Key
-            case 'Escape':
+                // Esc Key
+            case 27:
                 RocketCusta.keyboard.esc = true;
                 break;
         }
     });
     // Key Up
-    document.addEventListener('keyup', function(event) {
-        switch (event.key) {
+    jQuery(document).keyup(event => {
+        switch (event.keyCode) {
             // Left & A Key
-            case 'a':
-            case 'ArrowLeft':
+            case 37:
+            case 65:
                 RocketCusta.keyboard.left = false;
                 break;
-            // Up & W Key
-            case 'w':
-            case 'ArrowUp':
+                // Up & W Key
+            case 38:
+            case 87:
                 RocketCusta.keyboard.up = false;
                 break;
-            // Right & D Key
-            case 'd':
-            case 'ArrowRight':
+                // Right & D Key
+            case 39:
+            case 68:
                 RocketCusta.keyboard.right = false;
                 break;
-            // Down & S Key
-            case 's':
-            case 'ArrowDown':
+                // Down & S Key
+            case 40:
+            case 83:
                 RocketCusta.keyboard.down = false;
                 break;
-            // Esc Key
-            case 'Escape':
+                // Esc Key
+            case 27:
                 RocketCusta.keyboard.esc = false;
                 RocketCusta.pauseGame();
                 break;
@@ -458,8 +583,7 @@ RocketCusta.keyboardEvent = function()
  * Draw Frame Function
  * @method drawFrame
  */
-RocketCusta.drawFrame = function()
-{
+RocketCusta.drawFrame = function () {
     // Clear Frame
     RocketCusta.clearFrame();
 
@@ -469,24 +593,24 @@ RocketCusta.drawFrame = function()
     RocketCusta.fps = 1 / RocketCusta.delta;
 
     // Score
-    RocketCusta.updateScore();
+    if (!RocketCusta.menu)
+        RocketCusta.updateScore();
 
     // Rocket Collision
-    let collisionObjectsCount = RocketCusta.comets.length;
-    for(let i = 0; i < collisionObjectsCount; i++ ) {
-        let collisionRocket = RocketCusta.collision(RocketCusta.rockets[0], RocketCusta.comets[i]);
-        if(collisionRocket === 1) {
+    var collisionObjectsCount = RocketCusta.comets.length;
+    for (var i = 0; i < collisionObjectsCount; i++) {
+        var collisionRocket = RocketCusta.collision(RocketCusta.rockets[0], RocketCusta.comets[i]);
+        if (collisionRocket == 1)
             RocketCusta.gameover = true;
-        }
     }
 
     // Comet Collision
-    let cometObjectsCount = RocketCusta.comets.length;
-    for(let a = 0; a < cometObjectsCount; a++) {
-        for(let b = 0; b < cometObjectsCount; b++) {
-            if(a !== b) {
-                let collisionComet = RocketCusta.collision(RocketCusta.comets[a], RocketCusta.comets[b]);
-                if(collisionComet === 2) {
+    var cometObjectsCount = RocketCusta.comets.length;
+    for (var a = 0; a < cometObjectsCount; a++) {
+        for (var b = 0; b < cometObjectsCount; b++) {
+            if (a != b) {
+                var collisionComet = RocketCusta.collision(RocketCusta.comets[a], RocketCusta.comets[b]);
+                if (collisionComet == 2) {
                     RocketCusta.comets[a].velocityX = RocketCusta.comets[b].velocityX;
                     RocketCusta.comets[b].velocityX = RocketCusta.comets[a].velocityX;
                 }
@@ -500,24 +624,24 @@ RocketCusta.drawFrame = function()
     RocketCusta.movePlanet();
 
     // Game Is Not On Pause
-    if(!RocketCusta.gameover && !RocketCusta.menu) {
+    if (!RocketCusta.gameover && !RocketCusta.menu) {
         RocketCusta.animateRocket();
         RocketCusta.moveComet();
         RocketCusta.moveRocket();
     }
 
     // Explosion Animation
-    if(RocketCusta.gameover) {
+    if (RocketCusta.gameover) {
         RocketCusta.animateExplosion();
         RocketCusta.gameoverTimer--;
     }
 
     // Game Over Screen
-    if(RocketCusta.gameover && RocketCusta.gameoverTimer < 0)
+    if (RocketCusta.gameover && RocketCusta.gameoverTimer < 0)
         RocketCusta.gameOver();
 
     // Draw Next Frame
-    if(!RocketCusta.pause)
+    if (!RocketCusta.pause)
         RocketCusta.updateFrame();
 };
 
@@ -525,30 +649,16 @@ RocketCusta.drawFrame = function()
  * Update Score Function
  * @method updateScore
  */
-RocketCusta.updateScore = function()
-{
+RocketCusta.updateScore = function () {
     RocketCusta.score++;
     RocketCusta.scoreUpdate++;
 
-    if(RocketCusta.scoreUpdate > 12) {
+    if (RocketCusta.scoreUpdate > 12) {
         RocketCusta.level = Math.round(RocketCusta.score / 750) + 1;
         RocketCusta.speed = RocketCusta.level + 1;
-
-        let gameScore = document.querySelector('#game-score');
-        if(gameScore != null) {
-            gameScore.innerHTML = 'Score: ' + RocketCusta.score;
-        }
-
-        let gameLevel = document.querySelector('#game-level');
-        if(gameLevel != null) {
-            gameLevel.innerHTML = 'Level ' + RocketCusta.level;
-        }
-
-        let gameFps = document.querySelector('#game-fps');
-        if(gameFps != null) {
-            gameFps.innerHTML = RocketCusta.fps;
-        }
-
+        jQuery('#game-score, #game-user-score').text('Score: ' + RocketCusta.score);
+        jQuery('#game-level, #game-user-level').text('Level ' + RocketCusta.level);
+        jQuery('#game-fps').text(Math.round(RocketCusta.fps));
         RocketCusta.scoreUpdate = 0;
     }
 };
@@ -557,8 +667,7 @@ RocketCusta.updateScore = function()
  * Clear Frame Function
  * @method clearFrame
  */
-RocketCusta.clearFrame = function()
-{
+RocketCusta.clearFrame = function () {
     RocketCusta.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 };
 
@@ -566,10 +675,9 @@ RocketCusta.clearFrame = function()
  * Update Frame Function
  * @method updateFrame
  */
-RocketCusta.updateFrame = function()
-{
+RocketCusta.updateFrame = function () {
     window.requestAnimationFrame(() => {
-        window.setTimeout(RocketCusta.drawFrame, 1000 / 40);
+        window.setTimeout(RocketCusta.drawFrame, 1000 / 30);
     });
 };
 
@@ -577,13 +685,12 @@ RocketCusta.updateFrame = function()
  * Spawn Rocket Function
  * @method spawnRocket
  */
-RocketCusta.spawnRocket = function()
-{
-    let rocket = new RocketCusta.rocket();
+RocketCusta.spawnRocket = function () {
+    var rocket = new RocketCusta.rocket();
     RocketCusta.rockets.push(rocket);
 
-    for(let i = 0; i < 28; i++) {
-        let thrust = new RocketCusta.thrust();
+    for (var i = 0; i < 28; i++) {
+        var thrust = new RocketCusta.thrust();
         thrust.alpha = 0;
         RocketCusta.thrusts.push(thrust);
     }
@@ -593,13 +700,12 @@ RocketCusta.spawnRocket = function()
  * Animate Rocket Function
  * @method animateRocket
  */
-RocketCusta.animateRocket = function()
-{
-    let rocket = RocketCusta.rockets[0];
-    let thrustCount = RocketCusta.thrusts.length;
+RocketCusta.animateRocket = function () {
+    var rocket = RocketCusta.rockets[0];
+    var thrustCount = RocketCusta.thrusts.length;
 
-    for(let i = 0; i < thrustCount; i++) {
-        let thrust = RocketCusta.thrusts[i];
+    for (var i = 0; i < thrustCount; i++) {
+        var thrust = RocketCusta.thrusts[i];
         thrust.radius -= 0.25;
         thrust.x -= -rocket.velocityX + 3 + 2 * Math.random();
         thrust.y -= rocket.rotation * 10;
@@ -610,7 +716,7 @@ RocketCusta.animateRocket = function()
         RocketCusta.context.fillStyle = 'rgba(255,255,255,' + thrust.alpha + ')';
         RocketCusta.context.fill();
 
-        if(thrust.radius  < 1) {
+        if (thrust.radius < 1) {
             thrust.y = (Math.random() * 8) - 4;
             thrust.x = rocket.x + (25 * RocketCusta.scale);
             thrust.radius = (12 + 10 * Math.random()) * (RocketCusta.scale);
@@ -619,9 +725,8 @@ RocketCusta.animateRocket = function()
     }
 };
 
-RocketCusta.moveRocket = function ()
-{
-    let rocket = RocketCusta.rockets[0];
+RocketCusta.moveRocket = function () {
+    var rocket = RocketCusta.rockets[0];
 
     // Player Keyboard
     if (RocketCusta.keyboard.down && rocket.velocityY < rocket.speed) {
@@ -636,6 +741,10 @@ RocketCusta.moveRocket = function ()
     if (RocketCusta.keyboard.left && rocket.velocityX > -rocket.speed) {
         rocket.velocityX -= rocket.speedFactorX / 3;
     }
+    if (window.DeviceOrientationEvent && RocketCusta.mobile) {
+        rocket.velocityY += rocket.speedFactorY;
+        rocket.velocityX += rocket.speedFactorX / 3;
+    }
 
     // Velocity & Rotation
     rocket.velocityY *= rocket.friction;
@@ -644,26 +753,26 @@ RocketCusta.moveRocket = function ()
     rocket.x += rocket.velocityX;
     rocket.rotation = rocket.velocityY / 2 * Math.PI / 180;
 
-    if(rocket.x >= window.innerWidth) {
+    if (rocket.x >= window.innerWidth) {
         rocket.x = window.innerWidth;
         rocket.velocityX = -rocket.velocityX / 4;
     }
-    if(rocket.x <= 0) {
+    if (rocket.x <= 0) {
         rocket.x = 0;
         rocket.velocityX = -rocket.velocityX / 4;
     }
-    if(rocket.y >= window.innerHeight) {
+    if (rocket.y >= window.innerHeight) {
         rocket.y = window.innerHeight;
         rocket.velocityY = -rocket.velocityY / 2;
     }
-    if(rocket.y <= 0) {
+    if (rocket.y <= 0) {
         rocket.y = 0;
         rocket.velocityY = -rocket.velocityY / 2;
     }
 
     // Draw Rocket
     RocketCusta.context.save();
-    RocketCusta.context.translate(rocket.x,rocket.y);
+    RocketCusta.context.translate(rocket.x, rocket.y);
     RocketCusta.context.rotate(rocket.rotation);
     RocketCusta.context.drawImage(RocketCusta.rocketImage, -rocket.width / 2, -rocket.height / 2, rocket.width, rocket.height);
     RocketCusta.context.restore();
@@ -673,12 +782,11 @@ RocketCusta.moveRocket = function ()
  * Spawn Star Function
  * @method spawnStar
  */
-RocketCusta.spawnStar = function()
-{
-    let starCount = Math.round((window.innerHeight * window.innerWidth) / 18000);
+RocketCusta.spawnStar = function () {
+    var starCount = Math.round((window.innerHeight * window.innerWidth) / 9000);
 
-    for(let i = 0; i < starCount; i++) {
-        let star = new RocketCusta.star();
+    for (var i = 0; i < starCount; i++) {
+        var star = new RocketCusta.star();
         RocketCusta.stars.push(star);
     }
 };
@@ -687,12 +795,11 @@ RocketCusta.spawnStar = function()
  * Move Star Function
  * @method moveStar
  */
-RocketCusta.moveStar = function()
-{
-    let starCount = RocketCusta.stars.length;
+RocketCusta.moveStar = function () {
+    var starCount = RocketCusta.stars.length;
 
-    for(let i = 0; i < starCount; i++) {
-        let star = RocketCusta.stars[i];
+    for (var i = 0; i < starCount; i++) {
+        var star = RocketCusta.stars[i];
         star.x -= star.speed;
 
         RocketCusta.context.beginPath();
@@ -700,8 +807,8 @@ RocketCusta.moveStar = function()
         RocketCusta.context.fillStyle = 'rgba(255,255,255,.5)';
         RocketCusta.context.fill();
 
-        if(star.x < 0) {
-            let starObject = new RocketCusta.star();
+        if (star.x < 0) {
+            var starObject = new RocketCusta.star();
             starObject.x = window.innerWidth;
             RocketCusta.stars[i] = starObject;
         }
@@ -712,9 +819,8 @@ RocketCusta.moveStar = function()
  * Spawn Planet Function
  * @method spawnPlanet
  */
-RocketCusta.spawnPlanet = function()
-{
-    let planet = new RocketCusta.planet();
+RocketCusta.spawnPlanet = function () {
+    var planet = new RocketCusta.planet();
     RocketCusta.planets.push(planet);
 };
 
@@ -722,12 +828,11 @@ RocketCusta.spawnPlanet = function()
  * Move Planet Function
  * @method movePlanet
  */
-RocketCusta.movePlanet = function()
-{
-    let planetCount = RocketCusta.planets.length;
+RocketCusta.movePlanet = function () {
+    var planetCount = RocketCusta.planets.length;
 
-    for(let i = 0; i < planetCount; i++) {
-        let planet = RocketCusta.planets[i];
+    for (var i = 0; i < planetCount; i++) {
+        var planet = RocketCusta.planets[i];
         planet.x -= planet.speed;
 
         RocketCusta.context.globalAlpha = 0.04;
@@ -753,11 +858,11 @@ RocketCusta.movePlanet = function()
         RocketCusta.context.shadowBlur = 0;
 
         RocketCusta.context.globalAlpha = 0.5;
-        RocketCusta.context.drawImage(planet.image, planet.x - (planet.radius), planet.y  - (planet.radius), planet.radius * 2, planet.radius * 2);
+        RocketCusta.context.drawImage(planet.image, planet.x - (planet.radius), planet.y - (planet.radius), planet.radius * 2, planet.radius * 2);
         RocketCusta.context.globalAlpha = 1;
 
-        if(planet.x < 0 - planet.radius - 500) {
-            RocketCusta.planets.splice(i,1);
+        if (planet.x < 0 - planet.radius - 500) {
+            RocketCusta.planets.splice(i, 1);
             RocketCusta.spawnPlanet();
         }
     }
@@ -767,10 +872,9 @@ RocketCusta.movePlanet = function()
  * Spawn Comet Function
  * @method spawnComet
  */
-RocketCusta.spawnComet = function()
-{
-    if(RocketCusta.comets.length < Math.round(window.innerHeight / 100) + RocketCusta.speed + RocketCusta.level) {
-        let comet = new RocketCusta.comet();
+RocketCusta.spawnComet = function () {
+    if (RocketCusta.comets.length < Math.round(window.innerHeight / 100) + RocketCusta.speed + RocketCusta.level) {
+        var comet = new RocketCusta.comet();
         RocketCusta.comets.push(comet);
     }
 };
@@ -779,25 +883,25 @@ RocketCusta.spawnComet = function()
  * Move Comet Function
  * @method moveComet
  */
-RocketCusta.moveComet = function()
-{
-    let cometCount = RocketCusta.comets.length;
+RocketCusta.moveComet = function () {
+    var cometCount = RocketCusta.comets.length;
 
-    for(let i = 0; i < cometCount; i++) {
-        let comet = RocketCusta.comets[i];
+    for (var i = 0; i < cometCount; i++) {
+        var comet = RocketCusta.comets[i];
         comet.x -= comet.velocityX;
         comet.y -= comet.velocityY;
-        comet.force === 0 ? comet.rotation += comet.speed / 2 : comet.rotation -= comet.speed / 2;
-        let rotation = comet.rotation * Math.PI / 180;
+        comet.force == 0 ? comet.rotation += comet.speed / 2 : comet.rotation -= comet.speed / 2;
+        var rotation = comet.rotation * Math.PI / 180;
 
         RocketCusta.context.save();
-        RocketCusta.context.translate(comet.x,comet.y);
+        RocketCusta.context.translate(comet.x, comet.y);
         RocketCusta.context.rotate(rotation);
         RocketCusta.context.drawImage(comet.image, -comet.radius, -comet.radius, comet.radius * 2, comet.radius * 2);
         RocketCusta.context.restore();
 
-        if(comet.x < 0 - comet.radius) {
-            RocketCusta.comets[i] = new RocketCusta.comet();
+        if (comet.x < 0 - comet.radius) {
+            var cometObject = new RocketCusta.comet();
+            RocketCusta.comets[i] = cometObject;
         }
     }
 };
@@ -806,10 +910,9 @@ RocketCusta.moveComet = function()
  * Spawn Moon Function
  * @method spawnMoon
  */
-RocketCusta.spawnMoon = function()
-{
-    for(let i = 0; i < 2; i++) {
-        let moon = new RocketCusta.moon();
+RocketCusta.spawnMoon = function () {
+    for (var i = 0; i < 2; i++) {
+        var moon = new RocketCusta.moon();
         moon.x = window.innerWidth * Math.random();
         RocketCusta.moons.push(moon);
     }
@@ -819,12 +922,11 @@ RocketCusta.spawnMoon = function()
  * Move Moon Function
  * @method moveMoon
  */
-RocketCusta.moveMoon = function()
-{
-    let moonCount = RocketCusta.moons.length;
+RocketCusta.moveMoon = function () {
+    var moonCount = RocketCusta.moons.length;
 
-    for(let i = 0; i < moonCount; i++) {
-        let moon = RocketCusta.moons[i];
+    for (var i = 0; i < moonCount; i++) {
+        var moon = RocketCusta.moons[i];
         moon.x -= moon.speed;
 
         RocketCusta.context.globalAlpha = 0.12;
@@ -847,8 +949,9 @@ RocketCusta.moveMoon = function()
 
         RocketCusta.context.globalAlpha = 1;
 
-        if(moon.x < 0 - (moon.radius * 2 + 300)) {
-            RocketCusta.moons[i] = new RocketCusta.moon();
+        if (moon.x < 0 - (moon.radius * 2 + 300)) {
+            var moonObject = new RocketCusta.moon();
+            RocketCusta.moons[i] = moonObject;
         }
     }
 };
@@ -858,31 +961,26 @@ RocketCusta.moveMoon = function()
  * @method collision
  * @param objectA
  * @param objectB
- * @returns {number}
+ * @returns {boolean}
  */
-RocketCusta.collision = function(objectA, objectB)
-{
-    let collisionHeight;
-    let collisionWidth;
-    let collisionDetection = 0;
-    let vectorX = (objectA.x) - (objectB.x);
-    let vectorY = (objectA.y) - (objectB.y);
+RocketCusta.collision = function (objectA, objectB) {
+    var collisionDetection = 0;
+    var vectorX = (objectA.x) - (objectB.x);
+    var vectorY = (objectA.y) - (objectB.y);
 
-    if(objectA.name === 'rocket') {
-        collisionWidth = (objectA.width / 2.25) + (objectB.width / 2.25);
-        collisionHeight = (objectA.height / 2.5) + (objectB.height / 2.25);
-    }
-    else if(objectB.name === 'rocket') {
-        collisionWidth = (objectA.width / 2.25) + (objectB.width / 2.25);
-        collisionHeight = (objectA.height / 2.25) + (objectB.height / 2.5);
-    }
-    else {
-        collisionWidth = (objectA.width / 2.25) + (objectB.width / 2.25);
-        collisionHeight = (objectA.height / 2.25) + (objectB.height / 2.25);
+    if (objectA.name == 'rocket') {
+        var collisionWidth = (objectA.width / 2.25) + (objectB.width / 2.25);
+        var collisionHeight = (objectA.height / 2.5) + (objectB.height / 2.25);
+    } else if (objectB.name == 'rocket') {
+        var collisionWidth = (objectA.width / 2.25) + (objectB.width / 2.25);
+        var collisionHeight = (objectA.height / 2.25) + (objectB.height / 2.5);
+    } else {
+        var collisionWidth = (objectA.width / 2.25) + (objectB.width / 2.25);
+        var collisionHeight = (objectA.height / 2.25) + (objectB.height / 2.25);
     }
 
-    if(Math.abs(vectorX) < collisionWidth && Math.abs(vectorY) < collisionHeight) {
-        if(objectA.name === 'comet' && objectB.name === 'comet')
+    if (Math.abs(vectorX) < collisionWidth && Math.abs(vectorY) < collisionHeight) {
+        if (objectA.name == 'comet' && objectB.name == 'comet')
             collisionDetection = 2;
         else
             collisionDetection = 1;
@@ -895,11 +993,10 @@ RocketCusta.collision = function(objectA, objectB)
  * Generate Explosion
  * @method spawnExplosion
  */
-RocketCusta.spawnExplosion = function() {
-    for(let i = 0; i < 10; i++)
-    {
-        let explosion = new RocketCusta.explosion();
-        let rocket = RocketCusta.rockets[0];
+RocketCusta.spawnExplosion = function () {
+    for (var i = 0; i < 10; i++) {
+        var explosion = new RocketCusta.explosion();
+        var rocket = RocketCusta.rockets[0];
         explosion.y = rocket.y + (Math.floor(Math.random() * 51) - 25) - (rocket.height / 2);
         explosion.x = rocket.x + (Math.floor(Math.random() * 101) - 50) - (rocket.width / 2);
         RocketCusta.explosions.push(explosion);
@@ -910,12 +1007,11 @@ RocketCusta.spawnExplosion = function() {
  * Explosion Animation
  * @method animateExplosion
  */
-RocketCusta.animateExplosion = function ()
-{
-    let rocket = RocketCusta.rockets[0];
-    let explosionCount = RocketCusta.explosions.length;
+RocketCusta.animateExplosion = function () {
+    var rocket = RocketCusta.rockets[0];
+    var explosionCount = RocketCusta.explosions.length;
 
-    for(var i = 0; i < explosionCount; i++) {
+    for (var i = 0; i < explosionCount; i++) {
         var explosion = RocketCusta.explosions[i];
         explosion.x = rocket.x + ((Math.random() * 251) - 125);
         explosion.y = rocket.y + ((Math.random() * 251) - 125);
@@ -932,7 +1028,7 @@ RocketCusta.animateExplosion = function ()
         RocketCusta.context.fillStyle = explosion.color + ',' + explosion.alpha + ')';
         RocketCusta.context.fill();
 
-        if(explosion.alpha < 0) {
+        if (explosion.alpha < 0) {
             RocketCusta.explosions.shift();
         }
     }
