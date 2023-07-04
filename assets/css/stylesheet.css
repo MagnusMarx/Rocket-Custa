@@ -19,37 +19,6 @@ body {
     font-family: 'Righteous',Arial,sans-serif;
 }
 
-span.rank {
-    float: left;
-    display: block;
-    width: 10%;
-    text-indent: 10px;
-}
-
-span.name {
-    float: left;
-    display: block;
-    width: 35%;
-}
-
-span.score {
-    float: left;
-    display: block;
-    width: 20%;
-}
-
-span.level {
-    float: left;
-    display: block;
-    width: 15%;
-}
-
-span.date {
-    float: left;
-    display: block;
-    width: 20%;
-}
-
 @media screen and (max-width: 1920px) {
     body {
         font-size: 24px;
@@ -102,18 +71,6 @@ span.date {
     body {
         font-size: 8px;
     }
-    span.name {
-        width: 50%;
-    }
-    span.rank {
-        width: 8%;
-    }
-    span.score {
-        width: 10%;
-    }
-    span.level {
-        width: 10%;
-    }
 }
 
 @media screen and (max-width: 640px) {
@@ -130,6 +87,7 @@ canvas {
 }
 
 #game-score {
+    display: none;
     position: absolute;
     display: none;
     left: 50%;
@@ -150,6 +108,7 @@ canvas {
 }
 
 #game-level {
+    display: none;
     color: #fff;
     position: absolute;
     bottom: 10%;
@@ -174,6 +133,7 @@ canvas {
 }
 
 #game-credits {
+    display: none;
     position: absolute;
     left: 50%;
     width: 300px;
@@ -214,9 +174,24 @@ a#game-audio:hover {
     height: 100%;
 }
 
+#game-highscore {
+    display: none;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    padding: 10px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.75);
+    overflow-y: scroll;
+    color: #fff;
+    font-size: 60%;
+}
+
 ul {
     padding: 0;
-    margin: 0;
+    margin: 10px;
 }
 
 li {
@@ -237,6 +212,37 @@ li.legenda {
     background: rgba(255,255,255,.33);
 }
 
+span.rank {
+    float: left;
+    display: block;
+    width: 10%;
+    text-indent: 10px;
+}
+
+span.name {
+    float: left;
+    display: block;
+    width: 35%;
+}
+
+span.score {
+    float: left;
+    display: block;
+    width: 20%;
+}
+
+span.level {
+    float: left;
+    display: block;
+    width: 15%;
+}
+
+span.date {
+    float: left;
+    display: block;
+    width: 20%;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
     background: rgba(255,255,255,.1);
@@ -248,6 +254,71 @@ li.legenda {
 
 ::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,.5);
+}
+
+@media screen and (max-width: 1400px) {
+    #game-highscore {
+        left: 10%;
+        width: 80%;
+        font-size: 12px;
+    }
+
+}
+
+/* Ipad Portrait */
+@media screen and (max-width: 1024px) {
+    #game-credits {
+        font-size: 10px;
+    }
+
+    a#game-start,
+    a#game-submit-highscore {
+        font-size: 14px;
+    }
+
+    #game-highscore {
+        font-size: 11px;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    #game-credits {
+        font-size: 8px;
+    }
+    a#game-start,
+    a#game-submit-highscore {
+        font-size: 9px;
+    }
+
+    input#game-username {
+        font-size: 9px;
+        text-indent: 3px;
+    }
+
+    #game-score,
+    #game-user-score,
+    #game-user-level{
+        font-size: 10px;
+    }
+
+    #game-level {
+        font-size: 18px;
+    }
+
+    a#game-audio {
+        top: 5px;
+        right: 5px;
+        width: 12px;
+        height: 12px;
+    }
+
+    #game-fps {
+        font-size: 9px;
+    }
+
+    #game-highscore {
+        font-size: 10px;
+    }
 }
 
 ::-webkit-input-placeholder {
@@ -265,7 +336,7 @@ li.legenda {
 
 /* New UI Style */
 .game-navigation {
-    display: block;
+    display: none;
     position: absolute;
     left: 50%;
     top: 0;
@@ -277,21 +348,12 @@ li.legenda {
     margin-left: -12.5%;
 }
 
-.left {
-    left: 0;
-    margin-left: 0;
-}
-
-.hidden {
-    display: none;
-}
-
 .game-navigation a.button {
     float: left;
     display: block;
     width: 74%;
     padding: 3%;
-    margin: 5% 10% 0;
+    margin: 8% 10% 0;
     background: rgba(255,255,255,.25);
     border: 1px solid rgba(255,255,255,.5);
     color: rgba(255,255,255,.8);
@@ -340,7 +402,7 @@ li.legenda {
 }
 
 .game-section {
-    display: block;
+    display: none;
     position: absolute;
     right: 0;
     top: 0;
@@ -385,14 +447,82 @@ li.legenda {
     top: 0;
     position: relative;
     display: block;
+    border: none;
     background: none;
+    width: 100%;
+    height: 100%;
     font-size: 70%;
-    padding: 15px;
-    float: left;
-    color: white;
+}
+
+.game-over {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #721700;
+    z-index: 8;
 }
 
 mark {
     background: rgba(255,0,0,0.5);
     color: #fff;
+}
+
+a#game-submit-highscore {
+    display: none;
+    width: 74%;
+    padding: 3%;
+    margin: 2% 10% 0;
+    border: 1px solid rgba(255,255,255,.5);
+    background-color: rgba(255,255,255,.25);
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.5s;
+    font-size: 100%;
+}
+
+a#game-submit-highscore:hover {
+    transition: all 0.5s;
+    background-color: rgba(256,256,256,0.5);
+    border: 1px solid rgba(256,256,256,0.75);
+    transform: scale(1.1);
+}
+
+input#game-username {
+    display: none;
+    width: 74%;
+    padding: 3%;
+    margin: 2% 10% 0;
+    border: 1px solid rgba(255,255,255,.5);
+    background-color: rgba(255,255,255,.25);
+    color: #fff;
+    outline: none;
+    font-size: 100%;
+}
+
+.game-navigation #game-user-score {
+    display: none;
+    width: 100%;
+    color: white;
+    font-size: 100%;
+    text-align: center;
+}
+.game-navigation #game-user-level {
+    display: none;
+    float: left;
+    margin: 10% 0 0;
+    width: 100%;
+    color: white;
+    font-size: 200%;
+    text-align: center;
+}
+
+.game-navigation .advertisement {
+    float: left;
+    width: 100%;
+    padding-top: 10%;
+    overflow: hidden;
 }
